@@ -1,48 +1,31 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Salvar Localização</title>
+  <title>Enviar para Planilha</title>
 </head>
 <body>
-  <h1>Coletando localização...</h1>
-  <p id="status">Aguardando localização...</p>
+  <h2>Enviar dado para a planilha</h2>
+  <button onclick="enviar()">Enviar Agora</button>
+  <p id="status"></p>
 
   <script>
-    const endpoint = "https://script.google.com/macros/s/AKfycbzW_6wV0dBULWzkWj8WO5jE9JcDVtqC0Vl3uzlHCU17g4s97DHcwR_ZOf0FIQd-uECc/exec"; // URL do Google Apps Script
+    function enviar() {
+      const url = "https://script.google.com/macros/s/AKfycbwk5F09_2ajt_z2a054KA369U7s33QNwLiTu1AO06KbvU4mRUgQixX-yICwbMzYLxHF/exec"; // Substitua pela sua URL do Apps Script
+      const dado = "Clique em " + new Date().toLocaleString(); // Dado a enviar
 
-    function salvarLocalizacao(latitude, longitude) {
-      fetch(endpoint, {
+      fetch(url, {
         method: "POST",
-        body: JSON.stringify({ latitude, longitude }),
-        headers: {
-          "Content-Type": "application/json"
-        }
+        body: dado
       })
       .then(response => response.text())
-      .then(data => {
-        document.getElementById("status").textContent = "Localização salva com sucesso!";
-        console.log(data);
+      .then(result => {
+        document.getElementById("status").textContent = "Enviado com sucesso!";
+        console.log(result);
       })
       .catch(error => {
-        document.getElementById("status").textContent = "Erro ao salvar.";
+        document.getElementById("status").textContent = "Erro ao enviar.";
         console.error(error);
       });
-    }
-
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const lat = position.coords.latitude;
-          const lon = position.coords.longitude;
-          salvarLocalizacao(lat, lon);
-        },
-        (error) => {
-          document.getElementById("status").textContent = "Erro ao obter localização.";
-          console.error(error);
-        }
-      );
-    } else {
-      document.getElementById("status").textContent = "Geolocalização não suportada.";
     }
   </script>
 </body>
