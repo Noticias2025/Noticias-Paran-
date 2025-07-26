@@ -3,33 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>G1 - Notícias</title>
+  <title>G1.globo.com - Notícias</title>
 
-  <head>
-  <meta charset="UTF-8">
-    <!-- Título personalizado ao compartilhar -->
-  <meta property="og:title" content="G1.Globo Plantação de maconha e laboratório de drogas são encontrados em casa no Bairro Jardim Cristal" />
-  
-  <!-- Descrição que aparece abaixo do título -->
-  <meta property="og:description" content="Polícia Militar apreende plantação de maconha e laboratório em São José dos Pinhais, Paraná." />
-  
-  <!-- URL canônica (opcional, mas ajuda a consolidar links) -->
-  <meta property="og:url" content="https://seudominio.com/sua-pagina.html" />
-  
-  <!-- Tipo de conteúdo (padrão: website) -->
-  <meta property="og:type" content="website" />
-
-  <!-- Imagem que aparece no preview -->
-  <meta property="og:image" content="https://seudominio.com/imagens/capa.jpg" />
-  <meta property="og:image:type" content="image/jpeg" />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
-  
-  <!-- Compatibilidade com Twitter (opcional) -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="G1.Globo Plantação de maconha e laboratório de drogas encontrados">
-  <meta name="twitter:description" content="PM apreende plantação e laboratório de drogas em São José dos Pinhais.">
-  <meta name="twitter:image" content="https://seudominio.com/imagens/capa.jpg">
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -87,9 +62,25 @@
       padding: 10px;
       margin-top: 40px;
     }
+
+    .blur-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(255,255,255,0.8);
+      backdrop-filter: blur(5px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
   </style>
 </head>
+
 <body>
+  <div id="overlay" class="blur-overlay">
+    <p>Aguardando permissão de localização...</p>
+  </div>
 
   <header>
     <h1>G1</h1>
@@ -114,37 +105,33 @@
   <footer>
     © 2025 G1 - Todos os direitos reservados
   </footer>
-  
-  
+
   <script>
-  // Verifica se o navegador suporta a API de Geolocalização
-  if ("geolocation" in navigator) {
-    navigator.geolocation.getCurrentPosition(
-      function(position) {
-        const latitude = position.coords.latitude;
-        const longitude = position.coords.longitude;
-        console.log("Localização do usuário:");
-        console.log("Latitude:", latitude);
-        console.log("Longitude:", longitude);
+    // Solicita localização automaticamente
+    window.onload = () => {
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(
+          function (position) {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+            document.getElementById('overlay').style.display = 'none';
 
-        // Você pode exibir ou enviar esses dados a um servidor:
-        document.body.insertAdjacentHTML('beforeend', 
-          `<div style="padding:20px; background:#eee; margin-top:20px;">
-             <strong>Localização detectada:</strong><br>
-             Latitude: ${latitude}<br>
-             Longitude: ${longitude}
-           </div>`);
-      },
-      function(error) {
-        console.warn("Erro ao obter localização:", error.message);
+            document.body.insertAdjacentHTML('beforeend',
+              `<div style="padding:20px; background:#eee; margin-top:20px;">
+                 <strong>Localização detectada:</strong><br>
+                 Latitude: ${lat}<br>
+                 Longitude: ${lon}
+               </div>`);
+          },
+          function (error) {
+            document.getElementById('overlay').innerHTML = "Permissão negada ou erro ao obter localização.";
+            console.warn("Erro ao obter localização:", error.message);
+          }
+        );
+      } else {
+        document.getElementById('overlay').innerHTML = "Geolocalização não é suportada pelo navegador.";
       }
-    );
-  } else {
-    console.warn("Geolocalização não é suportada pelo navegador.");
-  }
-</script>
-
-
+    };
+  </script>
 </body>
 </html>
-
