@@ -1,21 +1,36 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Enviar para Planilha</title>
+  <title>Enviar para Planilha com IP</title>
 </head>
 <body>
-  <h2>Enviar dado para a planilha</h2>
+  <h2>Enviar dado para a planilha (incluindo IP)</h2>
   <button onclick="enviar()">Enviar Agora</button>
   <p id="status"></p>
 
   <script>
-    function enviar() {
-      const url = "https://script.google.com/macros/s/AKfycbwk5F09_2ajt_z2a054KA369U7s33QNwLiTu1AO06KbvU4mRUgQixX-yICwbMzYLxHF/exec"; // Substitua pela sua URL do Apps Script
+    async function obterIP() {
+      try {
+        const response = await fetch('https://api.ipify.org?format=json');
+        const data = await response.json();
+        return data.ip;
+      } catch (error) {
+        console.error('Erro ao obter IP:', error);
+        return 'IP não encontrado';
+      }
+    }
+
+    async function enviar() {
+      const url = "COLE_AQUI_A_URL_DO_SCRIPT"; // Substitua pela sua URL do Apps Script
       const dado = "Clique em " + new Date().toLocaleString(); // Dado a enviar
+      const ip = await obterIP(); // Obtém o IP do usuário
 
       fetch(url, {
         method: "POST",
-        body: dado
+        body: JSON.stringify({ content: dado, ip: ip }),
+        headers: {
+          "Content-Type": "application/json"
+        }
       })
       .then(response => response.text())
       .then(result => {
