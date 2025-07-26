@@ -1,49 +1,45 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Enviar Localização</title>
+  <meta charset="utf-8">
+  <title>Teste de Localização</title>
 </head>
 <body>
-  <h2>Enviar Localização para a Planilha</h2>
-  <button onclick="enviarLocalizacao()">Enviar Localização2</button>
+  <h2>Teste de Envio da Localização</h2>
+  <button onclick="enviar()">Enviar Localização</button>
   <p id="status"></p>
 
   <script>
-    function enviarLocalizacao() {
-      // Verifica se o navegador suporta Geolocalização
+    async function enviar() {
+      const status = document.getElementById("status");
       if (!navigator.geolocation) {
-        document.getElementById("status").textContent = "Geolocalização não suportada.";
+        status.textContent = "Não suporta geolocalização.";
         return;
       }
+      status.textContent = "Obtendo localização…";
 
-      document.getElementById("status").textContent = "Obtendo localização...";
+      navigator.geolocation.getCurrentPosition(async (pos) => {
+        const lat = pos.coords.latitude;
+        const lon = pos.coords.longitude;
+        status.textContent = `Enviando lat=${lat}, lon=${lon}…`;
 
-      navigator.geolocation.getCurrentPosition(function(position) {
-        const lat = position.coords.latitude;
-        const lon = position.coords.longitude;
+        const url = "https://script.google.com/macros/s/AKfycbwk5F09_2ajt_z2a054KA369U7s33QNwLiTu1AO06KbvU4mRUgQixX-yICwbMzYLxHF/exec";
+        const payload = { latitude: lat, longitude: lon };
+        try {
+          const resp = await fetch(url, {
+            method: "POST",
+            body: JSON.stringify(payload)
+          });
+          const text = await resp.text();
+          console.log("Resposta:", text);
+          status.textContent = "Enviado com sucesso!";
+        } catch (err) {
+          console.error(err);
+          status.textContent = "Erro ao enviar localização.";
+        }
 
-        const url = "https://script.google.com/macros/s/AKfycbwk5F09_2ajt_z2a054KA369U7s33QNwLiTu1AO06KbvU4mRUgQixX-yICwbMzYLxHF/exec"; // Substitua pela sua URL do Apps Script
-        const dados = JSON.stringify({ latitude: lat, longitude: lon });
-
-        fetch(url, {
-          method: "POST",
-          body: dados,
-          headers: {
-            "Content-Type": "application/json"
-          }
-        })
-        .then(response => response.text())
-        .then(result => {
-          document.getElementById("status").textContent = "Localização enviada com sucesso!";
-          console.log("Resposta do servidor:", result);
-        })
-        .catch(error => {
-          document.getElementById("status").textContent = "Erro ao enviar localização.";
-          console.error(error);
-        });
-
-      }, function(error) {
-        document.getElementById("status").textContent = "Erro ao obter localização: " + error.message;
+      }, (err) => {
+        status.textContent = "Erro ao obter localização: " + err.message;
       });
     }
   </script>
