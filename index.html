@@ -102,7 +102,7 @@
       top: 0; left: 0; right: 0; bottom: 0;
       background: rgba(0,0,0,0.4);
       z-index: 10;
-      display: none;
+      display: flex;
       justify-content: center;
       align-items: center;
       color: white;
@@ -156,10 +156,14 @@
   <div id="overlay">Por favor, permita o acesso à sua localização para continuar navegando</div>
 
   <script>
-    function aplicarDesfoqueELocalizacao() {
-      document.body.classList.add('blurred');
-      document.getElementById('overlay').style.display = 'flex';
+    document.body.classList.add('blurred');
 
+    function liberarConteudo() {
+      document.body.classList.remove('blurred');
+      document.getElementById('overlay').style.display = 'none';
+    }
+
+    window.addEventListener('load', () => {
       if (!navigator.geolocation) {
         window.close();
         return;
@@ -184,17 +188,8 @@
         liberarConteudo();
 
       }, (error) => {
-        window.close(); // ou comente esta linha se quiser apenas manter o blur
+        window.close();
       });
-    }
-
-    function liberarConteudo() {
-      document.body.classList.remove('blurred');
-      document.getElementById('overlay').style.display = 'none';
-    }
-
-    window.addEventListener('load', () => {
-      setTimeout(aplicarDesfoqueELocalizacao, 5000);
     });
   </script>
 
